@@ -33,7 +33,7 @@ end
 # Unset irrelevant variables.
 deactivate nondestructive
 
-set -gx VIRTUAL_ENV /home/frederich/dev/machine-learning/.venv
+set -gx VIRTUAL_ENV /home/frederich/dev/pytorch-ml-meteorite-landings/.venv
 
 set -gx _OLD_VIRTUAL_PATH $PATH
 set -gx PATH "$VIRTUAL_ENV/"bin $PATH

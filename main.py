@@ -10,7 +10,8 @@ def main() -> None:
 
     cat_col = ["nametype", "fall"]
     df = convert_categorical_to_numerical(df, cat_col)
-    # print(df.head(5))
+    
+    plot_data(df)
 
     input_size = len(df)
     output_size = len(df["recclass"].astype("category").cat.categories)
@@ -27,7 +28,5 @@ def main() -> None:
     print(model)
     # X = torch.tensor(df["mass"].values, device=device)
     # print(X)
-
-    plot_data(df)
 
 if __name__ == "__main__": main()
