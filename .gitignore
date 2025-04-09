@@ -1,4 +1,6 @@
 .venv/
 .vscode/
-data/*
+data/
+models/
+plots/
 **/__pycache__/

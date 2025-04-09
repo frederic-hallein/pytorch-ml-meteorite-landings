@@ -1,23 +1,5 @@
-import os.path
-import torch
 import pandas as pd
 import matplotlib.pyplot as plt
-
-def convert_categorical_to_numerical(df: pd.DataFrame, col_names: list[str]) -> pd.DataFrame:
-    """
-    Convert the categorical data into numerical.
-
-    :param df: pd.DataFrame containing the dataset
-    :param col_names: List of column names 
-    :return: pd.DataFrame containing converted dataset
-    """
-    for col_name in col_names:
-        df[col_name] = df[col_name].astype("category")
-        # print(len(df[col_name].cat.categories))
-
-    cat_columns = df.select_dtypes(['category']).columns
-    df[cat_columns] = df[cat_columns].apply(lambda x: x.cat.codes)
-    return df
 
 def _plot_pairplot(df: pd.DataFrame) -> None:
     """
