@@ -14,8 +14,8 @@ class TestDataTransform():
         })
 
         col_names = test_df.columns
-        expected = degree_to_radians(test_df, col_names)
-        actual = pd.DataFrame({
+        actual = degree_to_radians(test_df, col_names)
+        expected = pd.DataFrame({
             'col_1': [0.0],
             'col_2': [np.pi / 2],
             'col_3': [2 * np.pi],
