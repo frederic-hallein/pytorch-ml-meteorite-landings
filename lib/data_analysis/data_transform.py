@@ -1,21 +1,27 @@
+import numpy as np
 import pandas as pd
 
-def filter_incorrect_data_points(df: pd.DataFrame) -> pd.DataFrame:
+def standardization(df: pd.DataFrame, features: list[str]) -> pd.DataFrame:
     """
-    Filter dataset that contains the following 
-    incorrectly parsed entries:
-    - Date that is before 860 CE or after 2016
-    - Latitude and longitude of 0N/0E
+    Standardize the dataset.
 
     :param df: pd.DataFrame containing the dataset
-    :return: pd.DataFrame containing filtered dataset
+    :param features: List of feature names
+    :return: pd.DataFrame containing standardized dataset
     """
-    for x in df.index:
-        if df.loc[x, 'year'] <= 860 or df.loc[x, 'year'] >= 2016 \
-            or (df.loc[x, 'reclong'] == 0.0 and df.loc[x, 'reclat'] == 0.0) \
-            or (df.loc[x, 'reclong'] < -180.0 or df.loc[x, 'reclong'] > 180.0):
-            df.drop(x, inplace = True)
-    
+    df[features] -= df[features].mean()
+    df[features] /= df[features].std()
+    return df
+
+def degree_to_radians(df: pd.DataFrame, features: list[str]) -> pd.DataFrame:
+    """
+    Covert degrees to radians.
+
+    :param df: pd.DataFrame containing the dataset
+    :param features: List of feature names
+    :return: pd.DataFrame containing values in radians
+    """
+    df[features] = df[features] * np.pi / 180
     return df
 
 def convert_categorical_to_numerical(df: pd.DataFrame, col_names: list[str]) -> tuple[pd.DataFrame, dict]:

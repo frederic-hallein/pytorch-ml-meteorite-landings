@@ -2,9 +2,9 @@ import torch
 from torch import nn
 from torch.utils.data import TensorDataset, DataLoader, random_split
 
-from src.data_analysis import get_filtered_csv_data, convert_categorical_to_numerical, plot_data
-from src.machine_learning import train, test, evaluate
-from src.machine_learning import NeuralNetwork
+from lib.data_analysis import get_filtered_csv_data, plot_data, convert_categorical_to_numerical, standardization, degree_to_radians
+from lib.machine_learning import train, test, evaluate
+from lib.machine_learning import NeuralNetwork
 
 # Paths
 PATH       = 'data/archive/meteorite-landings-filtered.csv'
@@ -12,25 +12,30 @@ MODEL_PATH = 'models/model.pth'
 
 # Variables
 CAT_COL       = ['nametype', 'recclass', 'fall']
+BIG_NUM_COL   = ['mass', 'year']
+DEGREE_COL    = ['reclat', 'reclong']
 FEATURE_NAMES = ['nametype', 'mass', 'fall', 'year', 'reclat', 'reclong']
 LABEL_NAME    = 'recclass'
 
 # Hyperparameters
-LEARNING_RATE = 0.0001
-BATCH_SIZE    = 64
-EPOCHS        = 10
+LEARNING_RATE = 0.01
+BATCH_SIZE    = 16
+EPOCHS        = 100
 
 def main() -> None:
     df = get_filtered_csv_data(PATH)
-    # plot_data(df) # TODO : make more diverse plots to enhance understanding of data
+    # print(df.head(10))
 
     df, category_mappings = convert_categorical_to_numerical(df, CAT_COL)
+    df = standardization(df, BIG_NUM_COL)
+    df = degree_to_radians(df, DEGREE_COL)
+    # print(df.head(10))
+    # plot_data(df, category_mappings)
 
     input_size  = len(FEATURE_NAMES)
     num_classes = len(df[LABEL_NAME].astype('category').cat.categories)
 
-    # drop all rows that contain NaN values
-    df = df.dropna()
+    df = df.dropna() # drop all rows that contain NaN values
 
     features = torch.tensor(df[FEATURE_NAMES].values, dtype=torch.float)
     labels   = torch.tensor(df[[LABEL_NAME]].values, dtype=torch.float)

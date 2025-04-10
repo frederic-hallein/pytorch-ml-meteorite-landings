@@ -18,4 +18,4 @@ def evaluate(model, test_dataset, category_map, device) -> None:
         x = x.to(device)
         pred = model(x)
         predicted, actual = category_map[torch.argmax(pred).item()], category_map[y.item()]
-        print(f"Predicted: '{predicted}', \n   Actual: '{actual}'")
+        print(f"Predicted: '{predicted}'  \n   Actual: '{actual}'")

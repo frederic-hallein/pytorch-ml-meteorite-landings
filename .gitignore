@@ -1,6 +1,8 @@
+.pytest_cache/
 .venv/
 .vscode/
 data/
 models/
 plots/
 **/__pycache__/
+notes.txt

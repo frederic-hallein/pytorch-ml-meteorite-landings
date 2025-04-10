@@ -1,7 +1,23 @@
 import os.path
 import pandas as pd
 
-from .preprocessing import filter_incorrect_data_points
+def _filter_incorrect_data_points(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Filter dataset that contains the following 
+    incorrectly parsed entries:
+    - Date that is before 860 CE or after 2016
+    - Latitude and longitude of 0N/0E
+
+    :param df: pd.DataFrame containing the dataset
+    :return: pd.DataFrame containing filtered dataset
+    """
+    for x in df.index:
+        if df.loc[x, 'year'] <= 860 or df.loc[x, 'year'] >= 2016 \
+            or (df.loc[x, 'reclong'] == 0.0 and df.loc[x, 'reclat'] == 0.0) \
+            or (df.loc[x, 'reclong'] < -180.0 or df.loc[x, 'reclong'] > 180.0):
+            df.drop(x, inplace = True)
+    
+    return df
 
 def get_filtered_csv_data(path_filtered_data: str) -> pd.DataFrame:
     """ 
@@ -18,7 +34,7 @@ def get_filtered_csv_data(path_filtered_data: str) -> pd.DataFrame:
         except FileNotFoundError:
             raise AssertionError(f"File '{path_original_data}' does not exist.")
 
-        df = filter_incorrect_data_points(df)
+        df = _filter_incorrect_data_points(df)
         df.to_csv(path_filtered_data, index=False)
 
     return pd.read_csv(path_filtered_data)
