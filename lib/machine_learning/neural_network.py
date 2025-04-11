@@ -7,11 +7,9 @@ class NeuralNetwork(nn.Module):
             nn.Linear(input_size, 128),
             nn.ReLU(),
             nn.Dropout(p=0.2),
-
             nn.Linear(128, 64),
             nn.ReLU(),
             nn.Dropout(p=0.2),
-
             nn.Linear(64, num_classes),
         )
 

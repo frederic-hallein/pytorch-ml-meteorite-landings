@@ -1,0 +1,48 @@
+# Pytorch ML Meteorite Landings
+
+## Description
+
+A machine learning project utilizing PyTorch to analyze and predict meteorite classes based on [The Meteoritical Society ](https://www.kaggle.com/datasets/nasa/meteorite-landings?resource=download) dataset of over 45,000 meteorite impacts worldwide. The neural network contains a total of 7 layers, mainly consisting of linear, dropout, and ReLU activation function layers, in a Sequential container.
+
+## Installation (Linux)
+
+1. Clone the repository:
+
+```bash
+ git clone git@github.com:frederic-hallein/pytorch-ml-meteorite-landings.git
+```
+
+2. Inside the root directory, create a Python virtual environment:
+
+```bash
+python -m venv .venv
+```
+
+3. Using ```pip3```, install all dependencies:
+
+```bash
+pip3 install -r requirements.txt
+```
+
+## Usage
+
+To train, test and evaluate the model:
+
+```bash
+python3 main.py
+```
+
+
+## Extra: How to Run Tests
+
+To run all unit tests:
+
+```bash
+pytest tests/
+```
+
+To run specific tests:
+
+```bash
+pytest tests/test_<module_name>.py
+```
