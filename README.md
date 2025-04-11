@@ -18,7 +18,13 @@ A machine learning project utilizing PyTorch to analyze and predict meteorite cl
 python -m venv .venv
 ```
 
-3. Using ```pip3```, install all dependencies:
+3. Activate the virtual environment:
+
+```bash
+source .venv/bin/activate
+```
+
+4. Using ```pip3```, install all dependencies:
 
 ```bash
 pip3 install -r requirements.txt
@@ -31,7 +37,6 @@ To train, test and evaluate the model:
 ```bash
 python3 main.py
 ```
-
 
 ## Extra: How to Run Tests
 
