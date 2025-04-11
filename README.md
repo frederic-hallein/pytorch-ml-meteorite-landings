@@ -43,11 +43,11 @@ python3 main.py
 To run all unit tests:
 
 ```bash
-pytest tests/
+python -m pytest tests
 ```
 
 To run specific tests:
 
 ```bash
-pytest tests/test_<module_name>.py
+python -m pytest tests/test_<package_name>.py
 ```
