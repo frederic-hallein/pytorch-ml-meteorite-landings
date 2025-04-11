@@ -52,7 +52,7 @@ To run specific tests:
 python3 -m pytest tests/test_<package_name>.py
 ```
 
-where ```package_name``` currently only support the following options:
+where ```package_name``` currently only supports the following options:
 - ```data_loader```
 - ```data_transform```
 
