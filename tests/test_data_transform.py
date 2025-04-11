@@ -1,7 +1,8 @@
 import pandas as pd
 import numpy as np
 
-from lib.data_analysis.data_transform import degree_to_radians
+from lib.data_analysis.data_transform import degree_to_radians, \
+                                             convert_categorical_to_numerical
 
 class TestDataTransform():
     def test_degree_to_radians(self) -> None:
@@ -10,7 +11,7 @@ class TestDataTransform():
             'col_2': [90.0],
             'col_3': [360.0],
             'col_4': [-90.0],
-            'col_5': [540.0],
+            'col_5': [540.0]
         })
 
         col_names = test_df.columns
@@ -20,10 +21,22 @@ class TestDataTransform():
             'col_2': [np.pi / 2],
             'col_3': [2 * np.pi],
             'col_4': [-np.pi / 2],
-            'col_5': [3 * np.pi],
+            'col_5': [3 * np.pi]
         })
+
         for exp, act in zip(expected.values[0], actual.values[0]):
             assert exp == act, f'Should be equal, but got {exp} == {act} instead.'
 
     def test_convert_categorical_to_numerical(self) -> None:
-        pass
+        test_df = pd.DataFrame({
+            'col_1': ['A', 'A', 'C', 'D', 'E', 'C', 'B']
+        })
+
+        col_names = test_df.columns
+        actual = convert_categorical_to_numerical(test_df, col_names)[0]
+        expected = pd.DataFrame({
+            'col_1': [0, 0, 1, 2, 3, 2, 3]
+        })
+
+        for exp, act in zip(expected.values[0], actual.values[0]):
+            assert exp == act, f'Should be equal, but got {exp} == {act} instead.'

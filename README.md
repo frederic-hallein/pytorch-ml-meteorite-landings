@@ -15,7 +15,7 @@ A machine learning project utilizing PyTorch to analyze and predict meteorite cl
 2. Inside the root directory, create a Python virtual environment:
 
 ```bash
-python -m venv .venv
+python3 -m venv .venv
 ```
 
 3. Activate the virtual environment:
@@ -43,11 +43,16 @@ python3 main.py
 To run all unit tests:
 
 ```bash
-python -m pytest tests
+python3 -m pytest tests
 ```
 
 To run specific tests:
 
 ```bash
-python -m pytest tests/test_<package_name>.py
+python3 -m pytest tests/test_<package_name>.py
 ```
+
+where ```package_name``` currently only support the following options:
+- ```data_loader```
+- ```data_transform```
+
