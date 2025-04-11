@@ -1,71 +1,63 @@
-import torch
-from torch import nn
-from torch.utils.data import TensorDataset, DataLoader, random_split
+""" Main module """
 
-from lib.data_analysis import get_filtered_csv_data, plot_data, convert_categorical_to_numerical, standardization, degree_to_radians
-from lib.machine_learning import train, test, evaluate
+from torch.utils.data import random_split
+
+from lib.data_analysis import get_filtered_csv_data, \
+                              plot_data, \
+                              convert_categorical_to_numerical, \
+                              standardization, \
+                              degree_to_radians, \
+                              create_dataset
+from lib.machine_learning import get_device, create_ml_model, save_model, evaluate
 from lib.machine_learning import NeuralNetwork
 
-# Paths
+# paths
 PATH       = 'data/archive/meteorite-landings-filtered.csv'
 MODEL_PATH = 'models/model.pth'
 
-# Variables
-CAT_COL       = ['nametype', 'recclass', 'fall']
-BIG_NUM_COL   = ['mass', 'year']
-DEGREE_COL    = ['reclat', 'reclong']
-FEATURE_NAMES = ['nametype', 'mass', 'fall', 'year', 'reclat', 'reclong']
+# model variables
+FEATURE_NAME = ['nametype', 'mass', 'fall', 'year', 'reclat', 'reclong']
 LABEL_NAME    = 'recclass'
 
-# Hyperparameters
+# hyperparameters
 LEARNING_RATE = 0.01
 BATCH_SIZE    = 16
 EPOCHS        = 100
 
 def main() -> None:
+    """
+    Main function.
+
+    :return: None
+    """
+    # load data ---------------------------------------------
     df = get_filtered_csv_data(PATH)
-    # print(df.head(10))
+    plot_data(df)
 
-    df, category_mappings = convert_categorical_to_numerical(df, CAT_COL)
-    df = standardization(df, BIG_NUM_COL)
-    df = degree_to_radians(df, DEGREE_COL)
-    # print(df.head(10))
-    # plot_data(df, category_mappings)
+    # data transformation -----------------------------------
+    df, category_mappings = convert_categorical_to_numerical(df,
+                            ['nametype', 'recclass', 'fall'])
+    df = standardization(df, ['mass', 'year'])
+    df = degree_to_radians(df, ['reclat', 'reclong'])
 
-    input_size  = len(FEATURE_NAMES)
+    # machine learning --------------------------------------
+    input_size  = len(FEATURE_NAME)
     num_classes = len(df[LABEL_NAME].astype('category').cat.categories)
 
-    df = df.dropna() # drop all rows that contain NaN values
-
-    features = torch.tensor(df[FEATURE_NAMES].values, dtype=torch.float)
-    labels   = torch.tensor(df[[LABEL_NAME]].values, dtype=torch.float)
-    dataset  = TensorDataset(features, labels)
+    dataset = create_dataset(df, FEATURE_NAME, LABEL_NAME)
     train_dataset, test_dataset = random_split(dataset, [0.8, 0.2])
 
-    device = torch.accelerator.current_accelerator().type \
-             if torch.accelerator.is_available() else 'cpu'
-    print(f'Using {device} device')
-
+    device = get_device()
     model = NeuralNetwork(input_size, num_classes).to(device)
-    print(f'Using the following model:\n{model}\n')
+    model = create_ml_model(model, train_dataset, test_dataset,
+                             LEARNING_RATE, BATCH_SIZE, EPOCHS, device)
 
-    train_dataloader = DataLoader(train_dataset, BATCH_SIZE)
-    test_dataloader  = DataLoader(test_dataset , BATCH_SIZE)
+    # save model --------------------------------------------
+    save_model(model, MODEL_PATH)
 
-    loss_function = nn.CrossEntropyLoss()
-    optimizer = torch.optim.SGD(model.parameters(), LEARNING_RATE)
-    for t in range(EPOCHS):
-        print(f"Epoch { t + 1 }\n-------------------------------")
-        train(train_dataloader, device, model, loss_function, optimizer)
-        test(test_dataloader, device, model, loss_function)
-    print('Model training and testing finished.')
-
-    # save model
-    torch.save(model.state_dict(), MODEL_PATH)
-    print(f"\nSaved model state to '{MODEL_PATH}'")
-
-    # model evaluation
+    # model evaluation --------------------------------------
     recclass_map = category_mappings[LABEL_NAME]
     evaluate(model, test_dataset, recclass_map, device)
 
-if __name__ == "__main__": main()
+if __name__ == "__main__":
+    main()

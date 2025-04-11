@@ -29,18 +29,17 @@ def _plot_geolocation(df: pd.DataFrame) -> None:
         color="blue"
     )
     ax.set(
-        xlabel = 'reclong [rad]',
-        ylabel = 'reclat [rad]'
+        xlabel = 'reclong [degree]',
+        ylabel = 'reclat [degree]'
     )
     
     plt.savefig('plots/meteorite_geolocation.png')
 
-def _plot_recclass(df: pd.DataFrame, recclass_map: dict[int, str]) -> None:
+def _plot_recclass(df: pd.DataFrame) -> None:
     """
     """
     fig, ax = plt.subplots(figsize=(10, 7))
     fig.suptitle('Classes of Meteorites', fontsize = 16)
-    df['recclass'] = df['recclass'].map(recclass_map)
     ax = df['recclass'].value_counts().plot(kind='barh')
     ax.invert_yaxis()
     ax.set(
@@ -51,16 +50,14 @@ def _plot_recclass(df: pd.DataFrame, recclass_map: dict[int, str]) -> None:
 
     plt.savefig("plots/meteorite_recclass.png")
 
-def plot_data(df: pd.DataFrame, category_mappings: dict[str, dict[int, str]]) -> None:
+def plot_data(df: pd.DataFrame) -> None:
     """
     Plot and show the data.
 
     :params df: pd.DataFrame containing the dataset
     :return: None
     """
-    recclass_map = category_mappings['recclass']
 
-    # _plot_pairplot(df)
-    # _plot_geolocation(df)
-    _plot_recclass(df, recclass_map)
+    _plot_geolocation(df)
+    _plot_recclass(df)
     plt.show()
