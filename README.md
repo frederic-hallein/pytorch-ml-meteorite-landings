@@ -9,7 +9,7 @@ A machine learning project utilizing PyTorch to analyze and predict meteorite cl
 1. Clone the repository:
 
 ```bash
- git clone git@github.com:frederic-hallein/pytorch-ml-meteorite-landings.git
+ git clone https://github.com/frederic-hallein/pytorch-ml-meteorite-landings.git
 ```
 
 2. Inside the root directory, create a Python virtual environment:
